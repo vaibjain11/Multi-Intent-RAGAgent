@@ -1,0 +1,52 @@
+import pandas as pd
+
+df = pd.read_csv('emotion_labeled_nyc_restaurant_reviews.csv')
+
+# Define the categories with the provided restaurant names
+service_types = {
+    "Quick Service": [
+        'Blimpie', "Jersey Mike's Subs", 'Kennedy Chicken', 'Papa Johns Pizza',
+        'Golden Krust Caribbean Restaurant', 'Taco Bell', 'QuickChek', 'Great Wall',
+        'Taqueria Mexicana', 'Potbelly', 'QDOBA Mexican Eats', 'Crown Fried Chicken',
+        'Subway', "Joe's Pizza", 'KFC', 'Burger King', "McDonald's", 'Pizza Hut',
+        'Dunkin\'', 'Wingstop', 'Five Guys', "Wendy's", 'Pelicana Chicken',
+        'Chuck E. Cheese', 'Tropical Juice Bar', 'Kennedy Fried Chicken',
+        'Panda Express', 'White Castle', 'Chopt', 'Popeyes Louisiana Kitchen',
+        "Nick's Pizza", 'Bento Sushi', 'Motorino Pizza', 'Costco Food Court',
+        'Bobwhite Counter', 'Tal Bagels', "Domino's Pizza", 'Panera Bread',
+        'Harlem Shake', 'Ess-a-Bagel', 'Starbucks'
+    ],
+    "Fast Casual": [
+        'CAVA', 'Chipotle Mexican Grill', "Bill's Bar & Burger", 'Calexico',
+        'Chopt Creative Salad Co.', 'Dallas BBQ', 'Bareburger', 'sweetgreen',
+        'Le Pain Quotidien', 'Playa Bowls', 'The Halal Guys'
+    ],
+    "Casual Dining": [
+        'The Smith', "Applebee's Grill + Bar", 'Hard Rock Cafe', 'The Bistro - Eat. Drink. Connect.®',
+        'Red Lobster', 'Olive Garden Italian Restaurant', 'Pio Pio', "Jimbo's Hamburger Palace",
+        'Hibachi Grill & Supreme Buffet', 'Outback Steakhouse', 'IHOP', 'City Diner',
+        'Dinosaur Bar-B-Que', 'Gotham Pizza', 'China House', 'Good Taste', 'Magnolia Bakery',
+        'Cafe Mogador'
+    ],
+    "Fine Dining": [
+        'The Capital Grille', "Wolfgang's Steakhouse", "Morton's The Steakhouse", 'Mr Chow'
+    ]
+}
+
+# All other restaurants are classified as 'Independent'
+# If there are more than these restaurants, this approach will classify all others as 'Independent'
+
+# Create a hash map (dictionary) for the labels
+restaurant_labels = {name: category for category, names in service_types.items() for name in names}
+
+# Print the hash map
+print(restaurant_labels)
+
+# Apply the service type to each restaurant
+df['service_type'] = df['restaurant_name'].apply(lambda x: restaurant_labels.get(x, 'Independent'))
+
+# Save the updated dataframe with service types
+df.to_csv('updated_with_service_types.csv', index=False)
+
+# Verify by printing the head
+print(df.head())
